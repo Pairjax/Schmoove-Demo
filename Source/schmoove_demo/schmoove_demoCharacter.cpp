@@ -8,7 +8,6 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-
 //////////////////////////////////////////////////////////////////////////
 // Aschmoove_demoCharacter
 
@@ -32,7 +31,6 @@ Aschmoove_demoCharacter::Aschmoove_demoCharacter()
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 }
@@ -42,7 +40,7 @@ void Aschmoove_demoCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	//Add Input Mapping Context
+	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -60,15 +58,19 @@ void Aschmoove_demoCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		//Jumping
+		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
-		//Moving
+		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &Aschmoove_demoCharacter::Move);
 
-		//Looking
+		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &Aschmoove_demoCharacter::Look);
+
+		// Sliding
+		EnhancedInputComponent->BindAction(SlideAction, ETriggerEvent::Triggered, this, &Aschmoove_demoCharacter::Slide);
+		EnhancedInputComponent->BindAction(SlideAction, ETriggerEvent::Completed, this, &Aschmoove_demoCharacter::StopSlide);
 	}
 }
 
@@ -97,6 +99,19 @@ void Aschmoove_demoCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void Aschmoove_demoCharacter::Slide(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Slide begin"));
+	auto MovementComponent = GetCharacterMovement();
+
+	// MovementComponent->isFalling();
+}
+
+void Aschmoove_demoCharacter::StopSlide(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Slide end"));
 }
 
 void Aschmoove_demoCharacter::SetHasRifle(bool bNewHasRifle)

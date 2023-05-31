@@ -9,6 +9,7 @@
 
 class UInputComponent;
 class USkeletalMeshComponent;
+class UCharacterMovementComponent;
 class USceneComponent;
 class UCameraComponent;
 class UAnimMontage;
@@ -38,6 +39,9 @@ class Aschmoove_demoCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* SlideAction;
 
 	
 public:
@@ -70,6 +74,12 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	/** Called for sliding input press */
+	void Slide(const FInputActionValue& Value);
+	
+	/** Called for sliding input release */
+	void StopSlide(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
